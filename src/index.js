@@ -3,7 +3,7 @@
 */
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Button} from 'antd-mobile'
+// import {Button} from 'antd-mobile'
 import {HashRouter, Route, Switch} from 'react-router-dom'
 import {Provider} from 'react-redux'
 
