@@ -12,10 +12,14 @@ import {
     Radio,
     Button
 } from 'antd-mobile'
+import {connect} from 'react-redux'
+import {register} from '../../redux/action'
+import {Redirect} from 'react-router-dom'
+
 
 const ListItem = List.Item
 
-export default class Register extends Component {
+class Register extends Component {
     state = {
         username: '',  // 用户名
         password: '',  // 密码
@@ -23,7 +27,8 @@ export default class Register extends Component {
         type: 'fbz' // 用户类型名称
     }
 
-    Register = () => {
+    register = () => {
+        this.props.register(this.state)
         console.log(this.state)
     }
 
@@ -45,12 +50,19 @@ export default class Register extends Component {
     }
     render () {
         const {type} = this.state
+        const {msg, redirectTo} = this.props.user
+        // 如果redirectTo有值，需要重定向到指定路由
+        if (redirectTo) {
+            return <Redirect to={redirectTo} />
+        }
+
         return (
             <div>
                 <NavBar>招&nbsp;聘&nbsp;平&nbsp;台&nbsp;</NavBar>
                 <Logo />
                 <WingBlank>
                     <List>
+                        {msg? <div className="error-msg">{msg}</div> : null}
                     <WhiteSpace />
                         <InputItem onChange={val => {this.handerChange('username', val)}} placeholder='请输入用户名' onClick={this.handleClick()}>用户名:</InputItem>
                         <WhiteSpace />
@@ -66,7 +78,7 @@ export default class Register extends Component {
                             <Radio checked={type === 'fbz'} onChange={() => this.handerChange('type',  'fbz')}>发布职位</Radio>
                         </ListItem>
                         <WhiteSpace />
-                        <Button type={'primary'} onClick={this.Register}>注&nbsp;&nbsp;&nbsp;册</Button>
+                        <Button type={'primary'} onClick={this.register}>注&nbsp;&nbsp;&nbsp;册</Button>
                         <WhiteSpace />
                         <Button onClick={this.toLogin}>已有账户</Button>
                     </List>
@@ -75,3 +87,8 @@ export default class Register extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({user: state.user}),
+    {register}
+)(Register)

@@ -11,15 +11,18 @@ import {
     WhiteSpace,
     Button
 } from 'antd-mobile'
+import {connect} from 'react-redux'
+import {login} from '../../redux/action'
+import {Redirect} from 'react-router-dom'
 
-
-export default class Register extends Component {
+class Login extends Component {
     state = {
         username: '',  // 用户名
         password: ''  // 密码
     }
 
     Login = () => {
+        this.props.login(this.state)
         console.log(this.state)
     }
 
@@ -37,12 +40,19 @@ export default class Register extends Component {
     }
 
     render () {
+        const {msg, redirectTo} = this.props.user
+        // 如果redirectTo有值，需要重定向到指定路由
+        if (redirectTo) {
+            return <Redirect to={redirectTo} />
+        }
+        
         return (
             <div>
                 <NavBar>招&nbsp;聘&nbsp;平&nbsp;台&nbsp;</NavBar>
                 <Logo />
                 <WingBlank>
                     <List>
+                    {msg? <div className="error-msg">{msg}</div> : null}
                     <WhiteSpace />
                         <InputItem onChange={val => {this.handerChange('username', val)}} placeholder='请输入用户名'>用户名:</InputItem>
                         <WhiteSpace />
@@ -57,3 +67,8 @@ export default class Register extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({user: state.user}),
+    {login}
+)(Login)
